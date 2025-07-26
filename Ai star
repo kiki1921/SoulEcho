@@ -1,0 +1,78 @@
+<!DOCTYPE html>
+<html lang="ar">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+  <title>Légende AI</title>
+  <style>
+    body {
+      background: #111;
+      color: #fff;
+      font-family: 'Segoe UI', sans-serif;
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      padding: 30px;
+    }
+    h1 {
+      color: #00ffcc;
+    }
+    textarea {
+      width: 80%;
+      height: 150px;
+      margin: 10px 0;
+      background: #222;
+      color: #fff;
+      border: none;
+      padding: 10px;
+      font-size: 16px;
+    }
+    button {
+      padding: 10px 25px;
+      background: #00ffcc;
+      border: none;
+      color: #000;
+      font-weight: bold;
+      cursor: pointer;
+      border-radius: 5px;
+    }
+    .response {
+      width: 80%;
+      background: #222;
+      padding: 15px;
+      border-radius: 5px;
+      margin-top: 20px;
+    }
+  </style>
+</head>
+<body>
+  <h1>🧠 Légende AI</h1>
+  <p>مساعد ذكاء اصطناعي بدون قيود – اسأل ما تريد</p>
+  <textarea id="userInput" placeholder="اكتب سؤالك هنا..."></textarea>
+  <button onclick="sendToGPT()">أرسل</button>
+  <div class="response" id="responseBox">الرد سيظهر هنا...</div>
+
+  <script>
+    async function sendToGPT() {
+      const input = document.getElementById('userInput').value;
+      const responseBox = document.getElementById('responseBox');
+      responseBox.innerHTML = "⏳ جاري التفكير...";
+
+      const res = await fetch("https://api.openai.com/v1/chat/completions", {
+        method: "POST",
+        headers: {
+          "Content-Type": "application/json",
+          "Authorization": "Bearer YOUR_API_KEY_HERE" // ✨ غيّرها بمفتاحك
+        },
+        body: JSON.stringify({
+          model: "gpt-4",
+          messages: [{ role: "user", content: input }]
+        })
+      });
+
+      const data = await res.json();
+      responseBox.innerHTML = data.choices?.[0]?.message?.content || "❌ لم يتم الحصول على رد.";
+    }
+  </script>
+</body>
+</html>
